@@ -1,0 +1,172 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  Ordered
+  Shipped
+  Delivered
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  phone     String
+  createdAt DateTime @default(now()) @db.Timestamp()
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp()
+
+  @@map("admins")
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String
+  keywords  String
+  createdAt DateTime @default(now()) @db.Timestamp()
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp()
+
+  products Product[]
+
+  @@map("categories")
+}
+
+model Brand {
+  id          Int      @id @default(autoincrement())
+  name        String
+  logo        String?
+  description String?
+  createdAt   DateTime @default(now()) @db.Timestamp()
+  updatedAt   DateTime @default(now()) @updatedAt @db.Timestamp()
+
+  products Product[]
+
+  @@map("brands")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Int
+  quantity    Int      @default(1) @db.SmallInt
+  description String   @db.LongText
+  picture     String
+  categoryId  Int
+  brandId     Int
+  createdAt   DateTime @default(now()) @db.Timestamp()
+  updatedAt   DateTime @default(now()) @updatedAt @db.Timestamp()
+
+  brand    Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  ordered  OrderItem[]
+  pictures ProductPicture[]
+
+  @@map("products")
+}
+
+model ProductPicture {
+  id        Int      @id @default(autoincrement())
+  url       String   @db.LongText
+  productId Int
+  createdAt DateTime @default(now()) @db.Timestamp()
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp()
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("products_pictures")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  name     String
+  username String @unique
+  email    String @unique
+  password String
+  phone    Int    @db.UnsignedInt
+
+  createdAt DateTime @default(now()) @db.Timestamp()
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp()
+
+  orders    Order[]
+  addresses Address[]
+
+  @@map("users")
+}
+
+model Address {
+  id            Int     @id @default(autoincrement())
+  city          String
+  postCode      String
+  streetName    String
+  streetNumber  Int     @db.SmallInt
+  houseNumber   Int     @db.SmallInt
+  contactNumber Int     @db.UnsignedInt
+  notes         String?
+  userId        Int
+
+  createdAt DateTime @default(now()) @db.Timestamp()
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp()
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("addresses")
+}
+
+model Coupon {
+  id       Int     @id @default(autoincrement())
+  coupon   String
+  discount Int     @default(10) @db.SmallInt
+  active   Boolean @default(true)
+  usages   Int     @db.SmallInt
+  orders   Order[]
+
+  @@map("coupons")
+}
+
+model Order {
+  id            Int         @id @default(autoincrement())
+  code          String      @unique
+  status        OrderStatus
+  subTotal      Int
+  total         Int
+  discountValue Int
+  deliveryTaxes Int
+
+  userId   Int
+  couponId Int
+
+  deliverIn DateTime @db.Timestamp()
+  createdAt DateTime @default(now()) @db.Timestamp()
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp()
+
+  user   User        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  coupon Coupon      @relation(fields: [couponId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  items  OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id Int @id @default(autoincrement())
+
+  color      String?
+  size       String?
+  quantity   Int     @default(1) @db.SmallInt
+  unitPrice  Int
+  totalPrice Int
+
+  orderId   Int
+  productId Int
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("orders_items")
+}
