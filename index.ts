@@ -30,3 +30,5 @@ app.get('/', (req, res) => {
 app.listen(port, () => { 
   showAppURLCMD(port!)
 })
+
+export default app
