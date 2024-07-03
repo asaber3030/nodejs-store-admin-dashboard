@@ -20,6 +20,13 @@ app.use('/api/v1', [
   categoriesRouter,
 ])
 
+app.get('/', (req, res) => {
+  return res.status(200).json({
+    message: "Welcome here.",
+    status: 200
+  })
+})
+
 app.listen(port, () => { 
   showAppURLCMD(port!)
 })
