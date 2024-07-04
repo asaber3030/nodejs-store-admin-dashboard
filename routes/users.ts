@@ -1,12 +1,17 @@
 import express from "express"
 
-const usersRouter = express.Router()
-usersRouter.get('/users', (req, res, next) => {
-  return res.send('Hello users')
-})
+import UserController from "../http/controllers/UserController"
 
-usersRouter.get('/users/get', (req, res, next) => {
-  return res.send('get users')
-})
+const usersRouter = express.Router()
+
+usersRouter.get('/users', UserController.get)
+usersRouter.post('/users/login', UserController.login)
+usersRouter.post('/users/register', UserController.register)
+usersRouter.get('/users/:userId/addresses', UserController.addresses)
+usersRouter.get('/users/:userId/orders', UserController.orders)
+usersRouter.get('/users/:userId/orders/:orderId', UserController.getOrder)
+usersRouter.get('/users/:userId', UserController.user)
+usersRouter.patch('/users/:userId/update', UserController.update)
+usersRouter.delete('/users/:userId/delete', UserController.delete)
 
 export default usersRouter

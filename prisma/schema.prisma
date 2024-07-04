@@ -18,7 +18,7 @@ model Admin {
   name      String
   email     String   @unique
   password  String
-  phone     String
+  phone     String   @unique
   createdAt DateTime @default(now()) @db.Timestamp()
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamp()
 
@@ -89,7 +89,7 @@ model User {
   username String @unique
   email    String @unique
   password String
-  phone    Int    @db.UnsignedInt
+  phone    String @unique
 
   createdAt DateTime @default(now()) @db.Timestamp()
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamp()

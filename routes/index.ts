@@ -1,17 +1,19 @@
-import productsRouter from "./products";
+import productsRouter from "./products"
 import usersRouter from "./users";
-import authRouter from './auth'
+import adminRouter from './admin'
 import ordersRouter from './orders'
 import brandsRouter from './brands'
 import couponsRouter from './coupons'
 import categoriesRouter from './categories'
+import adminDataRouter from "./adminData"
 
 export {
   productsRouter,
   usersRouter,
-  authRouter,
+  adminRouter,
   ordersRouter,
   brandsRouter,
   couponsRouter,
-  categoriesRouter
+  categoriesRouter,
+  adminDataRouter
 }

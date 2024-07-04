@@ -5,7 +5,6 @@ export function checkAppStatus(req: Request, res: Response, next: NextFunction) 
   if (process.env.APP_STATUS) {
     const appStatus = process.env.APP_STATUS as AppStatus
     switch (appStatus) {
-
       case 'running':
         next()
       case 'maintanence':
@@ -16,7 +15,6 @@ export function checkAppStatus(req: Request, res: Response, next: NextFunction) 
       default:
         next()
     }
-
   }
   next()
 }
