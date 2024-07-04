@@ -29,6 +29,12 @@ app.get('/', async (req, res) => {
   })
 })
 
+app.get('new-route', async (req, res) => {
+  return res.status(200).json({
+    message: "New route",
+  })
+})
+
 app.listen(port, () => { 
   showAppURLCMD(port!)
 })
