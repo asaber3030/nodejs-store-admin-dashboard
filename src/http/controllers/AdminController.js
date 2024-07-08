@@ -23,17 +23,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const auth_1 = require("../../types/auth");
 const helpers_1 = require("../../utlis/helpers");
+const schema_1 = require("../../schema");
 const responses_1 = require("../../utlis/responses");
+const db_1 = __importDefault(require("../../utlis/db"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const Admin_1 = __importDefault(require("../models/Admin"));
-const db_1 = __importDefault(require("../../utlis/db"));
 class AdminController {
     static login(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const body = auth_1.loginSchema.safeParse(req.body);
+            const body = schema_1.adminSchema.login.safeParse(req.body);
             const data = body.data;
             if (!body.success) {
                 const errors = (0, helpers_1.extractErrors)(body);
@@ -44,13 +44,15 @@ class AdminController {
             }
             if (!data) {
                 return res.status(400).json({
-                    message: "Something went wrong while submitting data."
+                    message: "Something went wrong while submitting data.",
+                    status: 400
                 });
             }
             const user = yield Admin_1.default.findBy(data.email);
             if (!user) {
                 return res.status(404).json({
-                    message: "No user was found."
+                    message: "No user was found.",
+                    status: 404
                 });
             }
             const comparePasswords = yield bcrypt_1.default.compare(data.password, user.password);
@@ -64,13 +66,14 @@ class AdminController {
             const token = jsonwebtoken_1.default.sign(mainUser, secert);
             return res.status(200).json({
                 message: "Logged in successfully.",
-                token
+                status: 200,
+                data: { token }
             });
         });
     }
     static register(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const body = auth_1.registerSchema.safeParse(req.body);
+            const body = schema_1.adminSchema.create.safeParse(req.body);
             const data = body.data;
             if (!body.success) {
                 const errors = (0, helpers_1.extractErrors)(body);
@@ -115,8 +118,10 @@ class AdminController {
             return res.status(201).json({
                 message: "Admin Registered successfully.",
                 status: 201,
-                token,
-                data: mainUser
+                data: {
+                    user: mainUser,
+                    token
+                }
             });
         });
     }
@@ -175,16 +180,16 @@ class AdminController {
                     select: Admin_1.default.selectors
                 });
                 if (admin) {
-                    return res.status(200).json({ data: admin });
+                    return res.status(200).json({ status: 200, data: admin });
                 }
-                return res.status(200).json({
-                    data: {},
+                return res.status(400).json({
+                    status: 404,
                     message: "Invalid Admin, Or Expired Token. This admin might be removed from database."
                 });
             }
             catch (_a) {
-                return res.status(200).json({
-                    data: {},
+                return res.status(400).json({
+                    status: 404,
                     message: "Invalid Admin, Or Expired Token. This admin might be removed from database."
                 });
             }
@@ -204,7 +209,7 @@ class AdminController {
     }
     static update(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const body = auth_1.updateAdminSchema.safeParse(req.body);
+            const body = schema_1.adminSchema.update.safeParse(req.body);
             const data = body.data;
             const adminId = req.params.adminId ? +req.params.adminId : null;
             if (!adminId)

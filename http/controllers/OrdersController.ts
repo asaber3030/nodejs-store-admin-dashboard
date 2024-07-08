@@ -93,12 +93,12 @@ export default class OrdersController {
       
       if (!order) return notFound(res, "This order doesn't exist.")
 
-      const parsedValidations = orderSchemas.update.safeParse(body)
-      const errors = extractErrors(parsedValidations)
+      const parsedData = orderSchemas.update.safeParse(body)
+      const errors = extractErrors(parsedData)
       
-      if (!parsedValidations.success) return res.status(402).json({ status: 401, errors })
+      if (!parsedData.success) return res.status(402).json({ status: 401, errors })
 
-      const updatedOrder = await Order.update(order.id, parsedValidations.data)
+      const updatedOrder = await Order.update(order.id, parsedData.data)
 
       return res.status(200).json({
         data: updatedOrder,
@@ -134,25 +134,60 @@ export default class OrdersController {
   static async createOrder(req: Request, res: Response) {
     
     try {
-      const body = req.body
-      const parsedValidations = orderSchemas.create.safeParse(body)
-      const errors = extractErrors(parsedValidations)
+      const parsedData = orderSchemas.create.safeParse(req.body)
+      const errors = extractErrors(parsedData)
       
-      if (!parsedValidations.success) return res.status(402).json({ status: 401, errors })
+      if (!parsedData.success) return res.status(402).json({ status: 401, errors })
 
       let generetedCode = generateOrderId()
       
       const findOrder = await db.order.findUnique({ where: { code: generetedCode }, select: { id: true } })
-      const data = parsedValidations.data
+      const data = parsedData.data
 
-      if (findOrder) generetedCode = generateOrderId()
+      const coupon = await db.coupon.findUnique({ where: { id: data.couponId } })
+      const user = await db.user.findUnique({ where: { id: data.userId } })
+
+      if (!coupon) return notFound(res, "Coupon with provided id doesn't exist.")
+      if (!user) return notFound(res, "User with provided id doesn't exist.")
+
+      if (!coupon.active) return res.status(401).json({ message: "This coupon is currently inactive." })
+      if (coupon.usages === 0) return res.status(401).json({ message: "This coupon usages times is currently '0'. cannot use it anymore." })
+
+      await db.coupon.update({
+        where: { id: coupon.id },
+        data: { usages: coupon.usages === 0 ? coupon.usages : coupon.usages - 1 }
+      })
+
+      while (findOrder) {
+        generetedCode = generateOrderId()
+      }
 
       const createdOrder = await db.order.create({
         data: {
-          ...data,
-          code: generetedCode
+          status: data.status,
+          subTotal: data.subTotal,
+          total: data.total,
+          discountValue: data.discountValue,
+          deliveryTaxes: data.deliveryTaxes,
+          userId: data.userId,
+          couponId: data.couponId,
+          deliverIn: data.deliverIn,
+          code: generetedCode,
         }
       })
+
+      try {
+        data.items.forEach(async (item) => {
+          const newItem = await db.orderItem.create({
+            data: {
+              ...item,
+              orderId: createdOrder.id
+            }
+          })
+        })
+      } catch {
+        return notFound(res, "Please check productId, and orderId.")
+      }
 
       return res.status(201).json({
         data: createdOrder,

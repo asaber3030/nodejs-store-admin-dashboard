@@ -164,6 +164,12 @@ export default class ProductsController {
       if (!parsedBody.success) return res.status(402).json({ status: 401, errors })
       if (!data) return badRequest(res)
 
+      const brand = await db.brand.findUnique({ where: { id: data.brandId } })
+      const category = await db.category.findUnique({ where: { id: data.categoryId } })
+
+      if (!brand) return notFound(res, "Brand with provided id doesn't exist")
+      if (!category) return notFound(res, "Category with provided id doesn't exist")
+
       const createdProduct = await Product.create(data as unknown as Prisma.ProductCreateInput)
 
       return res.status(201).json({
@@ -172,7 +178,7 @@ export default class ProductsController {
       })
 
     } catch (error) {
-      return badRequest(res, "Something went wrong.")
+      return badRequest(res, error as any)
     }
   }
 

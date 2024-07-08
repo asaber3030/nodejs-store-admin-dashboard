@@ -88,11 +88,11 @@ class OrdersController {
                 const body = req.body;
                 if (!order)
                     return (0, responses_1.notFound)(res, "This order doesn't exist.");
-                const parsedValidations = schema_1.orderSchemas.update.safeParse(body);
-                const errors = (0, helpers_1.extractErrors)(parsedValidations);
-                if (!parsedValidations.success)
+                const parsedData = schema_1.orderSchemas.update.safeParse(body);
+                const errors = (0, helpers_1.extractErrors)(parsedData);
+                if (!parsedData.success)
                     return res.status(402).json({ status: 401, errors });
-                const updatedOrder = yield Order_1.default.update(order.id, parsedValidations.data);
+                const updatedOrder = yield Order_1.default.update(order.id, parsedData.data);
                 return res.status(200).json({
                     data: updatedOrder,
                     status: 200
@@ -124,19 +124,53 @@ class OrdersController {
     static createOrder(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const body = req.body;
-                const parsedValidations = schema_1.orderSchemas.create.safeParse(body);
-                const errors = (0, helpers_1.extractErrors)(parsedValidations);
-                if (!parsedValidations.success)
+                const parsedData = schema_1.orderSchemas.create.safeParse(req.body);
+                const errors = (0, helpers_1.extractErrors)(parsedData);
+                if (!parsedData.success)
                     return res.status(402).json({ status: 401, errors });
                 let generetedCode = (0, helpers_1.generateOrderId)();
                 const findOrder = yield db_1.default.order.findUnique({ where: { code: generetedCode }, select: { id: true } });
-                const data = parsedValidations.data;
-                if (findOrder)
-                    generetedCode = (0, helpers_1.generateOrderId)();
-                const createdOrder = yield db_1.default.order.create({
-                    data: Object.assign(Object.assign({}, data), { code: generetedCode })
+                const data = parsedData.data;
+                const coupon = yield db_1.default.coupon.findUnique({ where: { id: data.couponId } });
+                const user = yield db_1.default.user.findUnique({ where: { id: data.userId } });
+                if (!coupon)
+                    return (0, responses_1.notFound)(res, "Coupon with provided id doesn't exist.");
+                if (!user)
+                    return (0, responses_1.notFound)(res, "User with provided id doesn't exist.");
+                if (!coupon.active)
+                    return res.status(401).json({ message: "This coupon is currently inactive." });
+                if (coupon.usages === 0)
+                    return res.status(401).json({ message: "This coupon usages times is currently '0'. cannot use it anymore." });
+                yield db_1.default.coupon.update({
+                    where: { id: coupon.id },
+                    data: { usages: coupon.usages === 0 ? coupon.usages : coupon.usages - 1 }
                 });
+                while (findOrder) {
+                    generetedCode = (0, helpers_1.generateOrderId)();
+                }
+                const createdOrder = yield db_1.default.order.create({
+                    data: {
+                        status: data.status,
+                        subTotal: data.subTotal,
+                        total: data.total,
+                        discountValue: data.discountValue,
+                        deliveryTaxes: data.deliveryTaxes,
+                        userId: data.userId,
+                        couponId: data.couponId,
+                        deliverIn: data.deliverIn,
+                        code: generetedCode,
+                    }
+                });
+                try {
+                    data.items.forEach((item) => __awaiter(this, void 0, void 0, function* () {
+                        const newItem = yield db_1.default.orderItem.create({
+                            data: Object.assign(Object.assign({}, item), { orderId: createdOrder.id })
+                        });
+                    }));
+                }
+                catch (_a) {
+                    return (0, responses_1.notFound)(res, "Please check productId, and orderId.");
+                }
                 return res.status(201).json({
                     data: createdOrder,
                     status: 201

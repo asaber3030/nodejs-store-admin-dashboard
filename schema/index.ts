@@ -19,7 +19,6 @@ export const orderSchemas = {
     }).optional()
   }),
 
-
   create: z.object({
     couponId: z.number({ message: "Invalid Coupon ID." }),
     userId: z.number({ message: "Invalid User ID." }),
@@ -37,6 +36,17 @@ export const orderSchemas = {
     deliverIn: z.string().datetime({
       message: "Invalid date in 'Deliver in' field."
     }),
+    items: z.array(
+      z.object({
+        color: z.string().optional(),
+        size: z.string().optional(),
+        quantity: z.number({ message: "Quantity is required." }).gt(0),
+        unitPrice: z.number({ message: "Unit Price is required." }).gt(0),
+        totalPrice: z.number({ message: "Total Price is required." }).gt(0),
+        orderId: z.number({ message: "orderId is required." }).gt(0),
+        productId: z.number({ message: "productId is required." }).gt(0),
+      })
+    , { message: "Please make sure to provide the order items. including: [color?, size?, quantity, unitPrice, totalPrice, orderId, productId]. `?` means optional." })
   })
 
 }
@@ -140,6 +150,12 @@ export const productPictureSchema = {
 }
 
 export const userSchema = {
+  
+  login: z.object({
+    email: z.string().email({ message: "Email is required." }),
+    password: z.string()
+  }),
+
   create: z.object({
     name: z.string().min(1, { message: "Name cannot be less than 1 characters." }),
     username: z.string().min(3, { message: "Username cannot be less than 1 characters." }),
@@ -147,11 +163,36 @@ export const userSchema = {
     password: z.string().min(8, { message: "Password cannot be less than 8 characters." }),
     phone: z.string().regex(/^01[0-2,5]{1}[0-9]{8}$/, { message: "Invaliad Egyptian Phone Number format - 01x xxxx xxxx" }),
   }),
+
   update: z.object({
     name: z.string().min(1, { message: "Name cannot be less than 1 characters." }).optional(),
     username: z.string().min(3, { message: "Username cannot be less than 1 characters." }).optional(),
     email: z.string().email({ message: "Invalid Email." }).optional(),
     password: z.string().min(8, { message: "Password cannot be less than 8 characters." }).optional(),
     phone: z.string().regex(/^01[0-2,5]{1}[0-9]{8}$/, { message: "Invaliad Egyptian Phone Number format - 01x xxxx xxxx" }).optional(),
+  })
+ 
+}
+
+export const adminSchema = {
+
+  login: z.object({
+    email: z.string().email({ message: "Email is required." }),
+    password: z.string()
   }),
+
+  create: z.object({
+    name: z.string().min(1, { message: "Name cannot be less than 1 characters." }),
+    email: z.string().email({ message: "Invalid Email." }),
+    password: z.string().min(8, { message: "Password cannot be less than 8 characters." }),
+    phone: z.string().regex(/^01[0-2,5]{1}[0-9]{8}$/, { message: "Invaliad Egyptian Phone Number format - 01x xxxx xxxx" }),
+  }),
+
+  update: z.object({
+    name: z.string().min(1, { message: "Name cannot be less than 1 characters." }).optional(),
+    email: z.string().email({ message: "Invalid Email." }).optional(),
+    password: z.string().min(8, { message: "Password cannot be less than 8 characters." }).optional(),
+    phone: z.string().regex(/^01[0-2,5]{1}[0-9]{8}$/, { message: "Invaliad Egyptian Phone Number format - 01x xxxx xxxx" }).optional(),
+  })
+  
 }

@@ -1,5 +1,5 @@
 export type AppStatus = "running" | "maintanence"
-export type FindByField = 'email' | 'id' | 'username'
+export type FindByField = "email" | "id" | "username"
 
 export type TAdmin = {
   id: number,

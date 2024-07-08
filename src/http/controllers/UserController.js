@@ -63,7 +63,8 @@ class UserController {
             const token = jsonwebtoken_1.default.sign(mainUser, UserController.secret);
             return res.status(200).json({
                 message: "Logged in successfully.",
-                token
+                status: 200,
+                data: { token }
             });
         });
     }
@@ -116,8 +117,10 @@ class UserController {
             return res.status(201).json({
                 message: "User Registered successfully.",
                 status: 201,
-                token,
-                data: mainUser
+                data: {
+                    user: mainUser,
+                    token
+                }
             });
         });
     }

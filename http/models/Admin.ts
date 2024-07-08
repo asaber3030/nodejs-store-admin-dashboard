@@ -1,4 +1,4 @@
-import { FindByField } from "../../types/app";
+import { FindByField } from "../../types";
 
 import db from "../../utlis/db";
 

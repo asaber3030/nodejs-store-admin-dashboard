@@ -1,16 +1,15 @@
 import { Request, Response } from "express"
+import { TAdmin } from "../../types"
 
-import { loginSchema, registerSchema, updateAdminSchema } from "../../types/auth"
 import { createPagination, extractErrors, extractToken } from "../../utlis/helpers"
+import { adminSchema } from "../../schema"
 import { unauthorized } from "../../utlis/responses"
 
+import db from "../../utlis/db"
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
 import Admin from "../models/Admin"
-import db from "../../utlis/db"
-import { TAdmin } from "../../types/app"
-import { skip } from "node:test"
 
 export default class AdminController {
   
@@ -18,7 +17,7 @@ export default class AdminController {
 
   static async login(req: Request, res: Response) {
     
-    const body = loginSchema.safeParse(req.body)
+    const body = adminSchema.login.safeParse(req.body)
     const data = body.data
 
     if (!body.success) {
@@ -31,7 +30,8 @@ export default class AdminController {
 
     if (!data) {
       return res.status(400).json({
-        message: "Something went wrong while submitting data."
+        message: "Something went wrong while submitting data.",
+        status: 400
       }) 
     }
 
@@ -39,7 +39,8 @@ export default class AdminController {
 
     if (!user) {
       return res.status(404).json({
-        message: "No user was found."
+        message: "No user was found.",
+        status: 404
       })
     }
     
@@ -58,14 +59,15 @@ export default class AdminController {
 
     return res.status(200).json({
       message: "Logged in successfully.",
-      token
+      status: 200,
+      data: { token }
     })
 
   }
 
   static async register(req: Request, res: Response) {
     
-    const body = registerSchema.safeParse(req.body)
+    const body = adminSchema.create.safeParse(req.body)
     const data = body.data
 
     if (!body.success) {
@@ -118,8 +120,10 @@ export default class AdminController {
     return res.status(201).json({
       message: "Admin Registered successfully.",
       status: 201,
-      token,
-      data: mainUser
+      data: {
+        user: mainUser,
+        token
+      }
     })
 
   }
@@ -177,15 +181,15 @@ export default class AdminController {
         select: Admin.selectors
       })
       if (admin) {
-        return res.status(200).json({ data: admin })
+        return res.status(200).json({ status: 200, data: admin })
       }
-      return res.status(200).json({ 
-        data: {}, 
+      return res.status(400).json({ 
+        status: 404,
         message: "Invalid Admin, Or Expired Token. This admin might be removed from database." 
       })
     } catch {
-      return res.status(200).json({ 
-        data: {}, 
+      return res.status(400).json({ 
+        status: 404,
         message: "Invalid Admin, Or Expired Token. This admin might be removed from database." 
       })
     }
@@ -208,7 +212,7 @@ export default class AdminController {
 
   static async update(req: Request, res: Response) {
     
-    const body = updateAdminSchema.safeParse(req.body)
+    const body = adminSchema.update.safeParse(req.body)
     const data = body.data
 
     const adminId = req.params.adminId ? +req.params.adminId : null

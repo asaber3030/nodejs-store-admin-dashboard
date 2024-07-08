@@ -54,7 +54,8 @@ export default class UserController {
 
     return res.status(200).json({
       message: "Logged in successfully.",
-      token
+      status: 200,
+      data: { token }
     })
 
   }
@@ -113,14 +114,16 @@ export default class UserController {
 
     const { password, ...mainUser } = newUser
 
-    const secert = process.env.APP_USER_SECRET
-    const token = jwt.sign(mainUser, secert!)
+    const secert = process.env.APP_USER_SECRET!
+    const token = jwt.sign(mainUser, secert)
 
     return res.status(201).json({
       message: "User Registered successfully.",
       status: 201,
-      token,
-      data: mainUser
+      data: {
+        user: mainUser,
+        token
+      }
     })
 
   }

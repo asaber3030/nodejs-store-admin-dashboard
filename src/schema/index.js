@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userSchema = exports.productPictureSchema = exports.productSchemas = exports.categorySchemas = exports.couponSchemas = exports.brandSchemas = exports.orderSchemas = void 0;
+exports.adminSchema = exports.userSchema = exports.productPictureSchema = exports.productSchemas = exports.categorySchemas = exports.couponSchemas = exports.brandSchemas = exports.orderSchemas = void 0;
 const client_1 = require("@prisma/client");
 const zod_1 = require("zod");
 exports.orderSchemas = {
@@ -36,6 +36,15 @@ exports.orderSchemas = {
         deliverIn: zod_1.z.string().datetime({
             message: "Invalid date in 'Deliver in' field."
         }),
+        items: zod_1.z.array(zod_1.z.object({
+            color: zod_1.z.string().optional(),
+            size: zod_1.z.string().optional(),
+            quantity: zod_1.z.number({ message: "Quantity is required." }).gt(0),
+            unitPrice: zod_1.z.number({ message: "Unit Price is required." }).gt(0),
+            totalPrice: zod_1.z.number({ message: "Total Price is required." }).gt(0),
+            orderId: zod_1.z.number({ message: "orderId is required." }).gt(0),
+            productId: zod_1.z.number({ message: "productId is required." }).gt(0),
+        }), { message: "Please make sure to provide the order items. including: [color?, size?, quantity, unitPrice, totalPrice, orderId, productId]. `?` means optional." })
     })
 };
 exports.brandSchemas = {
@@ -116,6 +125,10 @@ exports.productPictureSchema = {
     })
 };
 exports.userSchema = {
+    login: zod_1.z.object({
+        email: zod_1.z.string().email({ message: "Email is required." }),
+        password: zod_1.z.string()
+    }),
     create: zod_1.z.object({
         name: zod_1.z.string().min(1, { message: "Name cannot be less than 1 characters." }),
         username: zod_1.z.string().min(3, { message: "Username cannot be less than 1 characters." }),
@@ -129,5 +142,23 @@ exports.userSchema = {
         email: zod_1.z.string().email({ message: "Invalid Email." }).optional(),
         password: zod_1.z.string().min(8, { message: "Password cannot be less than 8 characters." }).optional(),
         phone: zod_1.z.string().regex(/^01[0-2,5]{1}[0-9]{8}$/, { message: "Invaliad Egyptian Phone Number format - 01x xxxx xxxx" }).optional(),
+    })
+};
+exports.adminSchema = {
+    login: zod_1.z.object({
+        email: zod_1.z.string().email({ message: "Email is required." }),
+        password: zod_1.z.string()
     }),
+    create: zod_1.z.object({
+        name: zod_1.z.string().min(1, { message: "Name cannot be less than 1 characters." }),
+        email: zod_1.z.string().email({ message: "Invalid Email." }),
+        password: zod_1.z.string().min(8, { message: "Password cannot be less than 8 characters." }),
+        phone: zod_1.z.string().regex(/^01[0-2,5]{1}[0-9]{8}$/, { message: "Invaliad Egyptian Phone Number format - 01x xxxx xxxx" }),
+    }),
+    update: zod_1.z.object({
+        name: zod_1.z.string().min(1, { message: "Name cannot be less than 1 characters." }).optional(),
+        email: zod_1.z.string().email({ message: "Invalid Email." }).optional(),
+        password: zod_1.z.string().min(8, { message: "Password cannot be less than 8 characters." }).optional(),
+        phone: zod_1.z.string().regex(/^01[0-2,5]{1}[0-9]{8}$/, { message: "Invaliad Egyptian Phone Number format - 01x xxxx xxxx" }).optional(),
+    })
 };

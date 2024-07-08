@@ -154,6 +154,12 @@ class ProductsController {
                     return res.status(402).json({ status: 401, errors });
                 if (!data)
                     return (0, responses_1.badRequest)(res);
+                const brand = yield db_1.default.brand.findUnique({ where: { id: data.brandId } });
+                const category = yield db_1.default.category.findUnique({ where: { id: data.categoryId } });
+                if (!brand)
+                    return (0, responses_1.notFound)(res, "Brand with provided id doesn't exist");
+                if (!category)
+                    return (0, responses_1.notFound)(res, "Category with provided id doesn't exist");
                 const createdProduct = yield Product_1.default.create(data);
                 return res.status(201).json({
                     data: createdProduct,
@@ -161,7 +167,7 @@ class ProductsController {
                 });
             }
             catch (error) {
-                return (0, responses_1.badRequest)(res, "Something went wrong.");
+                return (0, responses_1.badRequest)(res, error);
             }
         });
     }

@@ -21,6 +21,7 @@ const app = (0, express_1.default)();
 const port = process.env.APP_PORT;
 app.use(express_1.default.json());
 app.use('/api/v1', [
+    routes_1.usersAuthRouter,
     routes_1.adminRouter,
     routes_1.adminDataRouter,
     routes_1.productsRouter,
@@ -34,7 +35,7 @@ app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     return res.status(200).json({
         message: "Welcome to admin store admin dashboard",
         info: "To start using the api head to this route: /api/v1/login",
-        status: 200,
+        status: 200
     });
 }));
 app.get('new-route', (req, res) => __awaiter(void 0, void 0, void 0, function* () {

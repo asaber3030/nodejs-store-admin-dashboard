@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { AppStatus } from "../types/app";
+import { AppStatus } from "../types";
 
 export function checkAppStatus(req: Request, res: Response, next: NextFunction) {
   if (process.env.APP_STATUS) {

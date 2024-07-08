@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.adminDataRouter = exports.categoriesRouter = exports.couponsRouter = exports.brandsRouter = exports.ordersRouter = exports.adminRouter = exports.usersRouter = exports.productsRouter = void 0;
+exports.usersAuthRouter = exports.adminDataRouter = exports.categoriesRouter = exports.couponsRouter = exports.brandsRouter = exports.ordersRouter = exports.adminRouter = exports.usersRouter = exports.productsRouter = void 0;
 const products_1 = __importDefault(require("./products"));
 exports.productsRouter = products_1.default;
 const users_1 = __importDefault(require("./users"));
@@ -20,3 +20,5 @@ const categories_1 = __importDefault(require("./categories"));
 exports.categoriesRouter = categories_1.default;
 const adminData_1 = __importDefault(require("./adminData"));
 exports.adminDataRouter = adminData_1.default;
+const userAuth_1 = __importDefault(require("./userAuth"));
+exports.usersAuthRouter = userAuth_1.default;

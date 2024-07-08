@@ -6,6 +6,7 @@ import brandsRouter from './brands'
 import couponsRouter from './coupons'
 import categoriesRouter from './categories'
 import adminDataRouter from "./adminData"
+import usersAuthRouter from "./userAuth"
 
 export {
   productsRouter,
@@ -15,5 +16,6 @@ export {
   brandsRouter,
   couponsRouter,
   categoriesRouter,
-  adminDataRouter
+  adminDataRouter,
+  usersAuthRouter
 }
