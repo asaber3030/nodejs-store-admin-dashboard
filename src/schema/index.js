@@ -89,10 +89,12 @@ exports.couponSchemas = {
 exports.categorySchemas = {
     update: zod_1.z.object({
         name: zod_1.z.string().max(255, { message: "Cannot be greater than 255 characters" }).optional(),
+        icon: zod_1.z.string().url({ message: "Category Icon Must be a URL" }).optional(),
         keywords: zod_1.z.string().max(255, { message: "Cannot be greater than 255 characters" }).optional(),
     }),
     create: zod_1.z.object({
         name: zod_1.z.string().max(255, { message: "Cannot be greater than 255 characters" }),
+        icon: zod_1.z.string().url({ message: "Category Icon Must be a URL" }),
         keywords: zod_1.z.string().max(255, { message: "Cannot be greater than 255 characters" }),
     })
 };

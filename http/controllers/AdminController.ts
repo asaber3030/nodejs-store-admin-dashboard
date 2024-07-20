@@ -324,4 +324,14 @@ export default class AdminController {
     })
   }
 
+  static async countStats(req: Request, res: Response) {
+    const countAdmins = await db.admin.count()
+    return res.status(200).json({
+      data: {
+        admins: countAdmins
+      },
+      status: 200
+    })
+  }
+
 }

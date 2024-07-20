@@ -8,6 +8,7 @@ const usersRouter = express.Router()
 usersRouter.use(checkIsAdmin)
 
 usersRouter.get('/users', UserController.get)
+usersRouter.get('/users/counts', UserController.countStats)
 usersRouter.get('/users/:userId/addresses', UserController.addresses)
 usersRouter.get('/users/:userId/orders', UserController.orders)
 usersRouter.get('/users/:userId/orders/:orderId', UserController.getOrder)

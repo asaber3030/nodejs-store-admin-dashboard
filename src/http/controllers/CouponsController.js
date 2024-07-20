@@ -114,5 +114,16 @@ class CouponsController {
             }
         });
     }
+    static countStats(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const countCoupons = yield db_1.default.coupon.count();
+            return res.status(200).json({
+                data: {
+                    coupons: countCoupons
+                },
+                status: 200
+            });
+        });
+    }
 }
 exports.default = CouponsController;

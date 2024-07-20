@@ -266,5 +266,27 @@ class ProductsController {
             }
         });
     }
+    static countStats(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const limit = req.query.limit ? +req.query.limit : 3;
+            const highestPrice = (yield db_1.default.product.aggregate({ _max: { price: true }, _avg: { price: true }, _min: { price: true } }));
+            const productStats = {
+                average: highestPrice._avg.price,
+                max: highestPrice._max.price,
+                min: highestPrice._min.price,
+            };
+            const highestProducts = yield db_1.default.product.findMany({ orderBy: { price: 'desc' }, take: limit });
+            const countAll = yield db_1.default.product.count();
+            return res.status(200).json({
+                data: {
+                    countAll,
+                    productStats,
+                    highestProducts
+                },
+                message: "Product picture hass been deleted.",
+                status: 201
+            });
+        });
+    }
 }
 exports.default = ProductsController;

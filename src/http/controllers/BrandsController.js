@@ -130,5 +130,17 @@ class BrandsController {
             }
         });
     }
+    static countStats(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const countBrands = yield db_1.default.brand.count();
+            return res.status(200).json({
+                message: "Brand counts.",
+                data: {
+                    brands: countBrands
+                },
+                status: 200
+            });
+        });
+    }
 }
 exports.default = BrandsController;

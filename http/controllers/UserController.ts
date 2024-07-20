@@ -1,6 +1,5 @@
 import { Request, Response } from "express"
 
-import { loginSchema } from "../../types/auth"
 import { createPagination, extractErrors } from "../../utlis/helpers"
 import { userSchema } from "../../schema"
 
@@ -15,7 +14,7 @@ export default class UserController {
 
   static async login(req: Request, res: Response) {
     
-    const body = loginSchema.safeParse(req.body)
+    const body = userSchema.login.safeParse(req.body)
     const data = body.data
 
     if (!body.success) {
@@ -369,6 +368,17 @@ export default class UserController {
       message: "User has been deleted successfully.",
       status: 201,
       data: mainUser
+    })
+  }
+
+  static async countStats(req: Request, res: Response) {
+    const countUsers = await db.user.count()
+    return res.status(200).json({
+      message: "User counts.",
+      data: {
+        users: countUsers
+      },
+      status: 200
     })
   }
 

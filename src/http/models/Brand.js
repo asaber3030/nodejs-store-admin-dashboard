@@ -17,6 +17,7 @@ class Brand {
     static find(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield db_1.default.brand.findUnique({
+                select: Object.assign(Object.assign({}, Brand.selectors), { _count: { select: { products: true } } }),
                 where: { id }
             });
         });
@@ -26,6 +27,7 @@ class Brand {
             return yield db_1.default.brand.findMany({
                 skip,
                 take,
+                select: Object.assign(Object.assign({}, Brand.selectors), { _count: { select: { products: true } } }),
                 orderBy: {
                     [orderBy]: orderType
                 }
@@ -62,5 +64,12 @@ class Brand {
         });
     }
 }
-Brand.selectors = {};
+Brand.selectors = {
+    id: true,
+    name: true,
+    logo: true,
+    description: true,
+    createdAt: true,
+    updatedAt: true
+};
 exports.default = Brand;

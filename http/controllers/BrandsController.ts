@@ -60,7 +60,6 @@ export default class BrandsController {
     })
   }
 
-  
   static async updateBrand(req: Request, res: Response) {
     
     const brandId = +req.params.id
@@ -136,6 +135,17 @@ export default class BrandsController {
     } catch (error) {
       return badRequest(res, "Something went wrong.")
     }
+  }
+
+  static async countStats(req: Request, res: Response) {
+    const countBrands = await db.brand.count()
+    return res.status(200).json({
+      message: "Brand counts.",
+      data: {
+        brands: countBrands
+      },
+      status: 200
+    })
   }
 
 }

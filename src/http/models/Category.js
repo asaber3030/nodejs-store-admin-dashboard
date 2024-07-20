@@ -17,7 +17,8 @@ class Category {
     static find(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield db_1.default.category.findUnique({
-                where: { id }
+                where: { id },
+                select: Object.assign(Object.assign({}, Category.selectors), { _count: { select: { products: true } } })
             });
         });
     }
@@ -26,6 +27,15 @@ class Category {
             return yield db_1.default.category.findMany({
                 skip,
                 take,
+                select: {
+                    id: true,
+                    name: true,
+                    icon: true,
+                    keywords: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    _count: { select: { products: true } },
+                },
                 orderBy: {
                     [orderBy]: orderType
                 }
@@ -62,5 +72,12 @@ class Category {
         });
     }
 }
-Category.selectors = {};
+Category.selectors = {
+    id: true,
+    name: true,
+    icon: true,
+    keywords: true,
+    createdAt: true,
+    updatedAt: true
+};
 exports.default = Category;

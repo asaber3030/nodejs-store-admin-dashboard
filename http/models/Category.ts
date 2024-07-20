@@ -4,11 +4,19 @@ import db from "../../utlis/db";
 
 export default class Category {
 
-  static selectors = {}
+  static selectors = {
+    id: true,
+    name: true,
+    icon: true,
+    keywords: true,
+    createdAt: true,
+    updatedAt: true
+  }
 
   static async find(id: number) {
     return await db.category.findUnique({ 
-      where: { id }
+      where: { id },
+      select: { ...Category.selectors, _count: { select: { products: true } } }
     })
   }
 
@@ -16,6 +24,15 @@ export default class Category {
     return await db.category.findMany({
       skip,
       take,
+      select: {
+        id: true,
+        name: true,
+        icon: true,
+        keywords: true,
+        createdAt: true,
+        updatedAt: true,
+        _count: { select: { products: true } },
+      },
       orderBy: {
         [orderBy]: orderType
       }

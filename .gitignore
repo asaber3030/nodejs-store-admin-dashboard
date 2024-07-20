@@ -3,7 +3,7 @@ node_modules
 .env
 
 prisma/migrations
-
+.idea
 .vercel
 
 # Local Netlify folder

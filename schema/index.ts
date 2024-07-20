@@ -103,11 +103,13 @@ export const categorySchemas = {
   
   update: z.object({
     name: z.string().max(255, { message: "Cannot be greater than 255 characters" }).optional(),
+    icon: z.string().url({ message: "Category Icon Must be a URL" }).optional(),
     keywords: z.string().max(255, { message: "Cannot be greater than 255 characters" }).optional(),
   }),
 
   create: z.object({
     name: z.string().max(255, { message: "Cannot be greater than 255 characters" }),
+    icon: z.string().url({ message: "Category Icon Must be a URL" }),
     keywords: z.string().max(255, { message: "Cannot be greater than 255 characters" }),
   })
 

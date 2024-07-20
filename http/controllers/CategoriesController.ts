@@ -6,7 +6,6 @@ import { categorySchemas } from "../../schema"
 
 import db from "../../utlis/db"
 import Category from "../models/Category"
-import { Prisma } from "@prisma/client"
 
 export default class CategoriesController {
 
@@ -27,14 +26,10 @@ export default class CategoriesController {
   static async getCategory(req: Request, res: Response) {
     
     const categoryId = req.params.id ? +req.params.id : null
-    
     if (!categoryId) return notFound(res)
     
     const category = await Category.find(categoryId)
-
-    if (!category) {
-      return notFound(res, `This category with id ${categoryId} wasn't found.`)
-    }
+    if (!category) return notFound(res, `This category with id ${categoryId} wasn't found.`)
 
     return res.status(200).json({
       data: category,
@@ -52,10 +47,7 @@ export default class CategoriesController {
     if (!categoryId) return notFound(res)
     
     const category = await Category.find(categoryId)
-
-    if (!category) {
-      return notFound(res, `This Category with id ${categoryId} wasn't found.`)
-    }
+    if (!category) return notFound(res, `This Category with id ${categoryId} wasn't found.`)
 
     const products = await db.product.findMany({
       where: { 
@@ -74,12 +66,12 @@ export default class CategoriesController {
         [orderBy]: orderType
       }
     })
+    
     return res.status(200).json({
       data: products,
       status: 200
     })
   }
-
   
   static async updateCategory(req: Request, res: Response) {
     
@@ -156,6 +148,17 @@ export default class CategoriesController {
     } catch (error) {
       return badRequest(res, "Something went wrong.")
     }
+  }
+
+  static async countStats(req: Request, res: Response) {
+    const countCategories = await db.category.count()
+    return res.status(200).json({
+      message: "Category counts.",
+      data: {
+        categories: countCategories
+      },
+      status: 200
+    })
   }
 
 }

@@ -9,6 +9,7 @@ const productsRouter = express.Router()
 productsRouter.use(checkIsAdmin)
 
 productsRouter.get('/products', ProductsController.get)
+productsRouter.get('/products/counts', ProductsController.countStats)
 productsRouter.post('/products/create', ProductsController.createProduct)
 productsRouter.get('/products/:id', ProductsController.getProduct)
 productsRouter.get('/products/:id/brand', ProductsController.getProductBrand)

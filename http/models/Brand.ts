@@ -4,10 +4,21 @@ import db from "../../utlis/db";
 
 export default class Brand {
 
-  static selectors = {}
+  static selectors = {
+    id: true,
+    name: true,
+    logo: true,
+    description: true,
+    createdAt: true,
+    updatedAt: true
+  }
 
   static async find(id: number) {
-    return await db.brand.findUnique({ 
+    return await db.brand.findUnique({
+      select: {
+        ...Brand.selectors,
+        _count: { select: { products: true } }
+      },
       where: { id }
     })
   }
@@ -16,6 +27,10 @@ export default class Brand {
     return await db.brand.findMany({
       skip,
       take,
+      select: {
+        ...Brand.selectors,
+        _count: { select: { products: true } }
+      },
       orderBy: {
         [orderBy]: orderType
       }

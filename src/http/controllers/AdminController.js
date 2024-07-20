@@ -307,6 +307,17 @@ class AdminController {
             });
         });
     }
+    static countStats(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const countAdmins = yield db_1.default.admin.count();
+            return res.status(200).json({
+                data: {
+                    admins: countAdmins
+                },
+                status: 200
+            });
+        });
+    }
 }
 AdminController.secret = process.env.APP_SECRET;
 exports.default = AdminController;

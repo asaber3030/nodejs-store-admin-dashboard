@@ -282,4 +282,28 @@ export default class ProductsController {
     }
   }
 
+  static async countStats(req: Request, res: Response) {
+
+    const limit = req.query.limit ? +req.query.limit : 3
+
+    const highestPrice = (await db.product.aggregate({ _max: { price: true }, _avg: { price: true }, _min: { price: true } }))
+    const productStats = {
+      average: highestPrice._avg.price,
+      max: highestPrice._max.price,
+      min: highestPrice._min.price,
+    }
+    const highestProducts = await db.product.findMany({ orderBy: { price: 'desc' }, take: limit })
+    const countAll = await db.product.count()
+
+    return res.status(200).json({
+      data: {
+        countAll,
+        productStats,
+        highestProducts
+      },
+      message: "Product picture hass been deleted.",
+      status: 201
+    })
+  }
+
 }

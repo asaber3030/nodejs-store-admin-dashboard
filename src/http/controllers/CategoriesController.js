@@ -39,9 +39,8 @@ class CategoriesController {
             if (!categoryId)
                 return (0, responses_1.notFound)(res);
             const category = yield Category_1.default.find(categoryId);
-            if (!category) {
+            if (!category)
                 return (0, responses_1.notFound)(res, `This category with id ${categoryId} wasn't found.`);
-            }
             return res.status(200).json({
                 data: category,
                 status: 200
@@ -56,9 +55,8 @@ class CategoriesController {
             if (!categoryId)
                 return (0, responses_1.notFound)(res);
             const category = yield Category_1.default.find(categoryId);
-            if (!category) {
+            if (!category)
                 return (0, responses_1.notFound)(res, `This Category with id ${categoryId} wasn't found.`);
-            }
             const products = yield db_1.default.product.findMany({
                 where: {
                     AND: [
@@ -146,6 +144,18 @@ class CategoriesController {
             catch (error) {
                 return (0, responses_1.badRequest)(res, "Something went wrong.");
             }
+        });
+    }
+    static countStats(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const countCategories = yield db_1.default.category.count();
+            return res.status(200).json({
+                message: "Category counts.",
+                data: {
+                    categories: countCategories
+                },
+                status: 200
+            });
         });
     }
 }

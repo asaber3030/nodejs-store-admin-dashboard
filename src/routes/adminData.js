@@ -9,6 +9,7 @@ const checkIsAdmin_1 = require("../middlewares/checkIsAdmin");
 const adminDataRouter = express_1.default.Router();
 adminDataRouter.use(checkIsAdmin_1.checkIsAdmin);
 adminDataRouter.get('/admins', AdminController_1.default.get);
+adminDataRouter.get('/admins/counts', AdminController_1.default.countStats);
 adminDataRouter.patch('/admins/:adminId/update', AdminController_1.default.update);
 adminDataRouter.delete('/admins/:adminId/delete', AdminController_1.default.delete);
 exports.default = adminDataRouter;

@@ -18,6 +18,7 @@ const schema_1 = require("../../schema");
 const Order_1 = __importDefault(require("../models/Order"));
 const User_1 = __importDefault(require("../models/User"));
 const db_1 = __importDefault(require("../../utlis/db"));
+const client_1 = require("@prisma/client");
 class OrdersController {
     static get(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -174,6 +175,28 @@ class OrdersController {
                 return res.status(201).json({
                     data: createdOrder,
                     status: 201
+                });
+            }
+            catch (error) {
+                return (0, responses_1.badRequest)(res, "Something went wrong.");
+            }
+        });
+    }
+    static countStats(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const countAll = yield db_1.default.order.count();
+                const ordered = yield db_1.default.order.count({ where: { status: client_1.OrderStatus.Ordered } });
+                const shipped = yield db_1.default.order.count({ where: { status: client_1.OrderStatus.Shipped } });
+                const delivered = yield db_1.default.order.count({ where: { status: client_1.OrderStatus.Delivered } });
+                return res.status(200).json({
+                    data: {
+                        all: countAll,
+                        ordered,
+                        shipped,
+                        delivered
+                    },
+                    status: 200
                 });
             }
             catch (error) {

@@ -9,6 +9,7 @@ const categoriesRouter = express.Router()
 categoriesRouter.use(checkIsAdmin)
 
 categoriesRouter.get('/categories', CategoriesController.get)
+categoriesRouter.get('/categories/counts', CategoriesController.countStats)
 categoriesRouter.post('/categories/create', CategoriesController.createCategory)
 categoriesRouter.get('/categories/:id', CategoriesController.getCategory)
 categoriesRouter.get('/categories/:id/products', CategoriesController.getCategoryProducts)

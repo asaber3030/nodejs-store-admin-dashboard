@@ -9,6 +9,7 @@ const checkIsAdmin_1 = require("../middlewares/checkIsAdmin");
 const productsRouter = express_1.default.Router();
 productsRouter.use(checkIsAdmin_1.checkIsAdmin);
 productsRouter.get('/products', ProductsController_1.default.get);
+productsRouter.get('/products/counts', ProductsController_1.default.countStats);
 productsRouter.post('/products/create', ProductsController_1.default.createProduct);
 productsRouter.get('/products/:id', ProductsController_1.default.getProduct);
 productsRouter.get('/products/:id/brand', ProductsController_1.default.getProductBrand);

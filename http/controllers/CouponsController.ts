@@ -119,4 +119,14 @@ export default class CouponsController {
     }
   }
 
+  static async countStats(req: Request, res: Response) {
+    const countCoupons = await db.coupon.count()
+    return res.status(200).json({
+      data: {
+        coupons: countCoupons
+      },
+      status: 200
+    })
+  }
+
 }

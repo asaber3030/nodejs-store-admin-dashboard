@@ -8,6 +8,7 @@ import Order from "../models/Order"
 import User from "../models/User"
 
 import db from "../../utlis/db"
+import { OrderStatus } from "@prisma/client"
 
 export default class OrdersController {
 
@@ -192,6 +193,29 @@ export default class OrdersController {
       return res.status(201).json({
         data: createdOrder,
         status: 201
+      })
+
+    } catch (error) {
+      return badRequest(res, "Something went wrong.")
+    }
+  }
+
+  static async countStats(req: Request, res: Response) {
+    try {
+
+      const countAll = await db.order.count()
+      const ordered = await db.order.count({ where: { status: OrderStatus.Ordered } })
+      const shipped = await db.order.count({ where: { status: OrderStatus.Shipped } })
+      const delivered = await db.order.count({ where: { status: OrderStatus.Delivered } })
+
+      return res.status(200).json({
+        data: {
+          all: countAll,
+          ordered,
+          shipped,
+          delivered
+        },
+        status: 200
       })
 
     } catch (error) {

@@ -10,6 +10,7 @@ ordersRouter.use(checkIsAdmin)
 
 ordersRouter.get('/orders', OrdersController.get)
 ordersRouter.post('/orders/create', OrdersController.createOrder)
+ordersRouter.get('/orders/counts', OrdersController.countStats)
 ordersRouter.get('/orders/:id', OrdersController.getOrder)
 ordersRouter.get('/orders/:id/items', OrdersController.getOrderItems)
 ordersRouter.get('/orders/:id/owner', OrdersController.getOrderOwner)

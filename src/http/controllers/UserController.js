@@ -23,7 +23,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const auth_1 = require("../../types/auth");
 const helpers_1 = require("../../utlis/helpers");
 const schema_1 = require("../../schema");
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -33,7 +32,7 @@ const User_1 = __importDefault(require("../models/User"));
 class UserController {
     static login(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const body = auth_1.loginSchema.safeParse(req.body);
+            const body = schema_1.userSchema.login.safeParse(req.body);
             const data = body.data;
             if (!body.success) {
                 const errors = (0, helpers_1.extractErrors)(body);
@@ -336,6 +335,18 @@ class UserController {
                 message: "User has been deleted successfully.",
                 status: 201,
                 data: mainUser
+            });
+        });
+    }
+    static countStats(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const countUsers = yield db_1.default.user.count();
+            return res.status(200).json({
+                message: "User counts.",
+                data: {
+                    users: countUsers
+                },
+                status: 200
             });
         });
     }
