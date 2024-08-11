@@ -1,15 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TAKE_LIMIT = exports.generateOrderId = exports.createPagination = exports.extractToken = exports.extractErrors = exports.showAppURLCMD = void 0;
+exports.TAKE_LIMIT = void 0;
+exports.showAppURLCMD = showAppURLCMD;
+exports.extractErrors = extractErrors;
+exports.extractToken = extractToken;
+exports.createPagination = createPagination;
+exports.generateOrderId = generateOrderId;
 function showAppURLCMD(port) {
     console.log(`Server running at PORT: http://localhost:${port}`);
 }
-exports.showAppURLCMD = showAppURLCMD;
 function extractErrors(errors) {
     var _a;
     return (_a = errors.error) === null || _a === void 0 ? void 0 : _a.flatten().fieldErrors;
 }
-exports.extractErrors = extractErrors;
 function extractToken(authorizationHeader) {
     if (authorizationHeader) {
         const splitted = authorizationHeader.split(' ');
@@ -18,7 +21,6 @@ function extractToken(authorizationHeader) {
     }
     return '';
 }
-exports.extractToken = extractToken;
 function createPagination(req) {
     var _a, _b;
     const page = req.query.page ? +req.query.page : 0;
@@ -34,7 +36,6 @@ function createPagination(req) {
         page
     };
 }
-exports.createPagination = createPagination;
 function generateOrderId(min = 999, max = 9999) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -44,5 +45,4 @@ function generateOrderId(min = 999, max = 9999) {
     const num4 = Math.floor(Math.random() * (max - min + 1)) + min;
     return num1.toString().padStart(4, "0") + '-' + num2.toString().padStart(4, "0") + '-' + num3.toString().padStart(4, "0") + '-' + num4.toString().padStart(4, "0");
 }
-exports.generateOrderId = generateOrderId;
 exports.TAKE_LIMIT = 10;

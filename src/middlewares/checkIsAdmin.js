@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkIsAdmin = void 0;
+exports.checkIsAdmin = checkIsAdmin;
 const responses_1 = require("../utlis/responses");
 const AdminController_1 = __importDefault(require("../http/controllers/AdminController"));
 function checkIsAdmin(req, res, next) {
@@ -24,4 +24,3 @@ function checkIsAdmin(req, res, next) {
         next();
     });
 }
-exports.checkIsAdmin = checkIsAdmin;

@@ -18,6 +18,20 @@ const schema_1 = require("../../schema");
 const db_1 = __importDefault(require("../../utlis/db"));
 const Category_1 = __importDefault(require("../models/Category"));
 class CategoriesController {
+    static getAll(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const categories = yield db_1.default.category.findMany({ select: { id: true, name: true } });
+                return res.status(200).json({
+                    status: 200,
+                    data: categories
+                });
+            }
+            catch (error) {
+                return (0, responses_1.badRequest)(res, "Error Something went wrong");
+            }
+        });
+    }
     static get(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { skip, limit, orderBy, orderType } = (0, helpers_1.createPagination)(req);

@@ -14,8 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../../utlis/db"));
 class Admin {
-    static all(search = '', skip = 0, take = 10, orderBy = 'id', orderType = 'desc') {
-        return __awaiter(this, void 0, void 0, function* () {
+    static all() {
+        return __awaiter(this, arguments, void 0, function* (search = '', skip = 0, take = 10, orderBy = 'id', orderType = 'desc') {
             return yield db_1.default.admin.findMany({
                 where: {
                     OR: [
@@ -37,8 +37,8 @@ class Admin {
             return yield db_1.default.admin.findUnique({ where: { id } });
         });
     }
-    static findBy(value, by = 'email') {
-        return __awaiter(this, void 0, void 0, function* () {
+    static findBy(value_1) {
+        return __awaiter(this, arguments, void 0, function* (value, by = 'email') {
             switch (by) {
                 case 'email':
                     return yield db_1.default.admin.findUnique({ where: { email: value } });

@@ -26,8 +26,8 @@ class Product {
             });
         });
     }
-    static all(search = '', skip = 0, take = 10, orderBy = 'id', orderType = 'desc') {
-        return __awaiter(this, void 0, void 0, function* () {
+    static all() {
+        return __awaiter(this, arguments, void 0, function* (search = '', skip = 0, take = 10, orderBy = 'id', orderType = 'desc') {
             return yield db_1.default.product.findMany({
                 where: {
                     OR: [

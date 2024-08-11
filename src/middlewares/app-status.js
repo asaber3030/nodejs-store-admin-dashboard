@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkAppStatus = void 0;
+exports.checkAppStatus = checkAppStatus;
 function checkAppStatus(req, res, next) {
     if (process.env.APP_STATUS) {
         const appStatus = process.env.APP_STATUS;
@@ -17,4 +17,3 @@ function checkAppStatus(req, res, next) {
     }
     next();
 }
-exports.checkAppStatus = checkAppStatus;

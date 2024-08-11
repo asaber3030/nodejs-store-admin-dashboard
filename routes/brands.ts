@@ -8,6 +8,7 @@ const brandsRouter = express.Router()
 
 brandsRouter.use(checkIsAdmin)
 
+brandsRouter.get('/brands/all', BrandsController.getAll)
 brandsRouter.get('/brands', BrandsController.get)
 brandsRouter.get('/brands/counts', BrandsController.countStats)
 brandsRouter.post('/brands/create', BrandsController.createBrand)

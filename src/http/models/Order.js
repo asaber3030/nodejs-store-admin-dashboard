@@ -27,8 +27,8 @@ class Order {
             return yield db_1.default.order.findUnique({ where: { code: value } });
         });
     }
-    static all(skip = 0, take = 10, orderBy = 'id', orderType = 'desc') {
-        return __awaiter(this, void 0, void 0, function* () {
+    static all() {
+        return __awaiter(this, arguments, void 0, function* (skip = 0, take = 10, orderBy = 'id', orderType = 'desc') {
             return yield db_1.default.order.findMany({
                 skip,
                 take,

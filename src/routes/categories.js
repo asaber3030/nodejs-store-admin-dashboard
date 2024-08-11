@@ -8,6 +8,7 @@ const CategoriesController_1 = __importDefault(require("../http/controllers/Cate
 const checkIsAdmin_1 = require("../middlewares/checkIsAdmin");
 const categoriesRouter = express_1.default.Router();
 categoriesRouter.use(checkIsAdmin_1.checkIsAdmin);
+categoriesRouter.get('/categories/all', CategoriesController_1.default.getAll);
 categoriesRouter.get('/categories', CategoriesController_1.default.get);
 categoriesRouter.get('/categories/counts', CategoriesController_1.default.countStats);
 categoriesRouter.post('/categories/create', CategoriesController_1.default.createCategory);

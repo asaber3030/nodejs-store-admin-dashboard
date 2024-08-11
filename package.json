@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "vercel-build": "echo Hello"
+    "vercel-build": "echo Hello",
+    "start": "npx nodemon ./src/index.js",
+    "compile": "tsc --watch"
   },
   "author": "",
   "license": "ISC",

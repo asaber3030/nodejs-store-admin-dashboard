@@ -9,6 +9,18 @@ import Category from "../models/Category"
 
 export default class CategoriesController {
 
+  static async getAll(req: Request, res: Response) {
+    try {
+      const categories = await db.category.findMany({ select: { id: true, name: true } })
+      return res.status(200).json({
+        status: 200,
+        data: categories
+      })
+    } catch (error) {
+      return badRequest(res, "Error Something went wrong")
+    }
+  }
+
   static async get(req: Request, res: Response) {
 
     const { skip, limit, orderBy, orderType } = createPagination(req)
