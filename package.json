@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "vercel-build": "echo Hello",
-    "start": "npx nodemon ./src/index.js",
-    "compile": "tsc --watch"
+    "compile": "tsc --watch",
+    "postinstall": "npx prisma generate",
+    "start:dev": "nodemon ./api/index.ts"
   },
   "author": "",
   "license": "ISC",
