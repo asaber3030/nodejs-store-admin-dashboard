@@ -2,12 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// DATABASE_URL
-// DATABASE_HOST
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
 }
 
 enum OrderStatus {
@@ -59,7 +57,7 @@ model Product {
   name        String
   price       Int
   quantity    Int      @default(1) @db.SmallInt
-  description String   @db.LongText
+  description String
   picture     String
   categoryId  Int
   brandId     Int
@@ -77,7 +75,7 @@ model Product {
 
 model ProductPicture {
   id        Int      @id @default(autoincrement())
-  url       String   @db.LongText
+  url       String
   productId Int
   createdAt DateTime @default(now()) @db.Timestamp()
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamp()
@@ -111,7 +109,7 @@ model Address {
   streetName    String
   streetNumber  Int     @db.SmallInt
   houseNumber   Int     @db.SmallInt
-  contactNumber Int     @db.UnsignedInt
+  contactNumber Int
   notes         String?
   userId        Int
 
